@@ -1,4 +1,7 @@
-global=_G; function table.object(self, super) if super then setmetatable(self, super) end; self.__index=self; return self end; function table.super(self, super, ...) return setmetatable(super.new(...), self) end
+local tmp = {} for i, v in pairs(table) do
+    tmp[i] = v
+end table = tmp
+global=getgenv(); function table.object(self, super) if super then setmetatable(self, super) end; self.__index=self; return self end; function table.super(self, super, ...) return setmetatable(super.new(...), self) end
 function table.new(meta, self) return setmetatable(self or {}, meta) end
 global. T = table.object({
   C = function(...)
@@ -32,7 +35,7 @@ global. Error = table.object({
         pcall(self.Finally)
         return res
       end
-    end;
+    end
   });
   Name = "Error";
   Description = "Default error";
