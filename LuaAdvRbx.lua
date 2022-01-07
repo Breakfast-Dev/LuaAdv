@@ -25,7 +25,7 @@ global. Error = table.object({
       self.Finally = t.finally or t.Finally
       return self
     end;
-    exec = function()
+    exec = function(self)
       local res, err = pcall(self.Try)
       if (not res) then
         pcall(self.Catch, err)
