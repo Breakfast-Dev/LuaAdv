@@ -33,7 +33,7 @@ global. Error = table.object({
         pcall(self.Finally)
         return res
       end
-    end
+    end;
   });
   Name = "Error";
   Description = "Default error";
@@ -44,7 +44,7 @@ global. Error = table.object({
     self.Description = desc
     self.Context = context
     return self
-  end
+  end;
   print = function(self)
     IO.println(
       self.Name .. ": " .. self.Description .. "\n"  ..
