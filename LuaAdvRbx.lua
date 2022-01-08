@@ -93,3 +93,19 @@ global. IO = table.object({
     return tostring(io.read())
   end;
 })
+global. Import = table.object({
+  service = function(name: string): Service 
+    getgenv().name = game:GetService(name)
+  end;
+  http = function(name: string): Service 
+    loadstring(game:HttpGet("http://" .. addr))()
+  end;
+  https = function(name: string): Service 
+    loadstring(game:HttpGet("https://" .. addr))()
+  end;
+  static = function(tab: string): Service 
+    for i, v in pairs(tab) do
+      getgenv()[i] = v
+    end
+  end
+})
