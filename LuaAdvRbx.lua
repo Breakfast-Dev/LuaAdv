@@ -3,6 +3,33 @@ local tmp = {} for i, v in pairs(table) do
 end table = tmp
 global=getgenv(); function table.object(self, super) if super then setmetatable(self, super) end; self.__index=self; return self end; function table.super(self, super, ...) return setmetatable(super.new(...), self) end
 function table.new(meta, self) return setmetatable(self or {}, meta) end
+global. import = function(name)
+  return {
+    from = function(root)
+    if root:find("@") then
+      if root:find("/", 1, true) then 
+        local resins = game
+        for i, v in pairs(root:gsub("@game/", ""):split("/")) do
+          resins = resins:FindFirstChild(v)
+        end
+        getgenv()[name] = resins[name]
+      elseif root == "@game" then
+        getgenv()[name] = game:GetService(name)
+      elseif root ~= "@game" then
+        return
+      end
+    else
+      local restab = getgenv()
+      if root:find('.', 1, true) then
+        for i, v in pairs(root:split(".")) do
+          restab = restab[v]
+        end
+      end
+      getgenv()[name] = restab[name]
+    end
+  end
+  }
+end
 global. T = table.object({
   C = function(...)
     local params = {...}
@@ -10,6 +37,22 @@ global. T = table.object({
       if (i % 2) ~= 0 and type(v) ~= params[i + 1] then
         error("expected '" .. params[i + 1] .. "', got '" .. type(v) .. "'")
       end
+    end
+  end
+})
+global. Import = table.object({
+  service = function(name: string): Service 
+    getgenv()[name] = game:GetService(name)
+  end;
+  http = function(addr: string): Service 
+    loadstring(game:HttpGet("http://" .. addr))()
+  end;
+  https = function(addr: string): Service 
+    loadstring(game:HttpGet("https://" .. addr))()
+  end;
+  static = function(tab: string): Service 
+    for i, v in pairs(tab) do
+      getgenv()[i] = v
     end
   end
 })
@@ -92,20 +135,4 @@ global. IO = table.object({
   readString = function()
     return tostring(io.read())
   end;
-})
-global. Import = table.object({
-  service = function(name: string): Service 
-    getgenv()[name] = game:GetService(name)
-  end;
-  http = function(addr: string): Service 
-    loadstring(game:HttpGet("http://" .. addr))()
-  end;
-  https = function(addr: string): Service 
-    loadstring(game:HttpGet("https://" .. addr))()
-  end;
-  static = function(tab: string): Service 
-    for i, v in pairs(tab) do
-      getgenv()[i] = v
-    end
-  end
 })
