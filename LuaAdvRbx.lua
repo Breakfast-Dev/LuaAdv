@@ -16,23 +16,26 @@ global. T = table.object({
 global. Error = table.object({
   Handle = table.object({
     Try = function() end;
-    Catch = function(err) end;
-    Finally = function() end;
-    new = function(t) T.C(t, "table")
+    Ok = function() end;
+    Err = function(err) end;
+    Result = function() end;
+    new = function(fn, t) T.C(fn, "function", t, "table")
       local self = table.new(Error.Handle)
-      self.Try = t.try or t.Try
-      self.Catch = t.catch or t.Catch
-      self.Finally = t.finally or t.Finally
+      self.Try = fn
+      self.Ok = t.ok or t.Ok
+      self.Err = t.err or t.Err
+      self.Result = t.result or t.Result
       return self
     end;
     exec = function(self)
       local res, err = pcall(self.Try)
       if (not res) then
-        pcall(self.Catch, err)
-        pcall(self.Finally)
+        pcall(self.Err, err)
+        pcall(self.Result, res)
         return err
       elseif (res) then
-        pcall(self.Finally)
+        pcall(self.Ok)
+        pcall(self.Result, res)
         return res
       end
     end
