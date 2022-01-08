@@ -95,7 +95,7 @@ global. IO = table.object({
 })
 global. Import = table.object({
   service = function(name: string): Service 
-    getgenv().name = game:GetService(name)
+    getgenv()[name] = game:GetService(name)
   end;
   http = function(addr: string): Service 
     loadstring(game:HttpGet("http://" .. addr))()
