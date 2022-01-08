@@ -8,24 +8,100 @@ global. import = function(name)
     from = function(root)
     if root:find("@") then
       if root:find("/", 1, true) then 
-        local resins = game
-        for i, v in pairs(root:gsub("@game/", ""):split("/")) do
-          resins = resins:FindFirstChild(v)
+        if type(name) == "table" then
+          local resins = game
+          for i, v in pairs(root:gsub("@game/", ""):split("/")) do
+            resins = resins:FindFirstChild(v)
+          end
+          for i, v in pairs(resins:GetChildren()) do
+            for j, k in pairs(name) do
+              if v.Name == k then
+                getgenv()[k] = resins[k]
+              end
+            end
+          end
+        elseif type(name) == "string" then
+          if name == "*" then
+            local resins = game
+            for i, v in pairs(root:gsub("@game/", ""):split("/")) do
+              resins = resins:FindFirstChild(v)
+            end
+            for i, v in pairs(resins:GetChildren()) do
+              getgenv()[v.Name] = resins[v.Name]
+            end
+          else
+            local resins = game
+            for i, v in pairs(root:gsub("@game/", ""):split("/")) do
+              resins = resins:FindFirstChild(v)
+            end
+            getgenv()[name] = resins[name]
+          end
         end
-        getgenv()[name] = resins[name]
       elseif root == "@game" then
-        getgenv()[name] = game:GetService(name)
+        if type(name) == "table" then
+          for i, v in pairs(game:GetChildren()) do
+            for j, k in pairs(name) do
+              if v.Name == k then
+                getgenv()[k] = game[k]
+              end
+            end
+          end
+        elseif type(name) == "string" then
+          if name == "*" then
+            for i, v in pairs(game:GetChildren()) do
+              local i = v.Name:gsub(" ", "")
+              getgenv()[i] = v
+            end
+          else
+            getgenv()[name] = game:GetService(name)
+          end
+        end
       elseif root ~= "@game" then
         return
       end
     else
-      local restab = getgenv()
-      if root:find('.', 1, true) then
-        for i, v in pairs(root:split(".")) do
-          restab = restab[v]
+      if type(name) == "table" then
+        local restab = getgenv()
+        if root:find('.', 1, true) then
+          for i, v in pairs(root:split(".")) do
+            restab = restab[v]
+          end
+        else
+          restab = restab[root]
+        end
+        for i, v in pairs(restab) do
+          for j, k in pairs(name) do
+            if i == k then
+              getgenv()[k] = restab[k]
+            end
+          end
+        end
+        getgenv()[name] = restab[name]
+      elseif type(name) == "string" then
+        if name == "*" then
+          local restab = getgenv()
+          if root:find('.', 1, true) then
+            for i, v in pairs(root:split(".")) do
+              restab = restab[v]
+            end
+          else
+            restab = restab[root]
+          end
+          for i, v in pairs(restab) do
+            getgenv()[i] = restab[i]
+          end
+        else
+          local restab = getgenv()
+          if root:find('.', 1, true) then
+            for i, v in pairs(root:split(".")) do
+              restab = restab[v]
+            end
+          else
+            restab = restab[root]
+          end
+          getgenv()[name] = restab[name]
         end
       end
-      getgenv()[name] = restab[name]
     end
   end
   }
