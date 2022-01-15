@@ -106,6 +106,87 @@ global. import = function(name)
   end
   }
 end
+global. object = table.object({
+  global = function(name)
+    return setmetatable({
+      inherit = function(super)
+        return function(obj)
+          local superobj = getgenv()
+          for i, v in pairs(string.split(super, ".")) do
+            superobj = superobj[v]
+          end
+          global [name] = table.object(obj, superobj)
+        end
+      end
+    }, {
+      __call = function(tab, obj)
+        global [name] = table.object(obj)
+      end
+    })
+  end,
+  inherit = function(super)
+    return function(obj)
+      local superobj = getgenv()
+      for i, v in pairs(string.split(super, ".")) do
+        superobj = superobj[v]
+      end
+      return table.object(obj, superobj)
+    end
+  end
+})
+setmetatable(global. object, {
+  __call = function(tab, name)
+    if type(name) == "table" then
+      return table.object(name)
+    else
+      return setmetatable({
+        inherit = function(super)
+          return function(obj)
+            local superobj = getgenv()
+            for i, v in pairs(string.split(super, ".")) do
+              superobj = superobj[v]
+            end
+            if string.find(name, ".", 1, true) then 
+              local parobj, nameslen, objname = getgenv(), 0, ""
+              for i, v in pairs(string.split(name, ".")) do
+                nameslen = nameslen + 1
+              end
+              for i, v in pairs(string.split(name, ".")) do
+                if i < nameslen then
+                  parobj = parobj[v]
+                else
+                  objname = v
+                end
+              end
+              parobj[objname] = table.object(obj, superobj)
+            else
+              return table.object(obj, superobj)
+            end
+          end
+        end
+      }, {
+        __call = function(tab, obj)
+          if string.find(name, ".", 1, true) then 
+            local parobj, nameslen, objname = getgenv(), 0, ""
+            for i, v in pairs(string.split(name, ".")) do
+              nameslen = nameslen + 1
+            end
+            for i, v in pairs(string.split(name, ".")) do
+              if i < nameslen then
+                parobj = parobj[v]
+              else
+                objname = v
+              end
+            end
+            parobj[objname] = table.object(obj)
+          else
+            return table.object(obj)
+          end
+        end
+      })
+    end
+  end
+})
 global. T = table.object({
   C = function(...)
     local params = {...}
