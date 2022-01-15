@@ -6,79 +6,71 @@ function table.new(meta, self) return setmetatable(self or {}, meta) end
 global. import = function(name)
   return {
     from = function(root)
-    if root:find("@") then
-      if root:find("/", 1, true) then 
-        if type(name) == "table" then
-          local resins = game
-          for i, v in pairs(root:gsub("@game/", ""):split("/")) do
-            resins = resins:FindFirstChild(v)
-          end
-          for i, v in pairs(resins:GetChildren()) do
-            for j, k in pairs(name) do
-              if v.Name == k then
-                getgenv()[k] = resins[k]
-              end
-            end
-          end
-        elseif type(name) == "string" then
-          if name == "*" then
+      if root:find("@") then
+        if root:find("/", 1, true) then 
+          if type(name) == "table" then
             local resins = game
             for i, v in pairs(root:gsub("@game/", ""):split("/")) do
               resins = resins:FindFirstChild(v)
             end
             for i, v in pairs(resins:GetChildren()) do
-              getgenv()[v.Name] = resins[v.Name]
-            end
-          else
-            local resins = game
-            for i, v in pairs(root:gsub("@game/", ""):split("/")) do
-              resins = resins:FindFirstChild(v)
-            end
-            getgenv()[name] = resins[name]
-          end
-        end
-      elseif root == "@game" then
-        if type(name) == "table" then
-          for i, v in pairs(game:GetChildren()) do
-            for j, k in pairs(name) do
-              if v.Name == k then
-                getgenv()[k] = game[k]
+              for j, k in pairs(name) do
+                if v.Name == k then
+                  getgenv()[k] = resins[k]
+                end
               end
             end
+          elseif type(name) == "string" then
+            if name == "*" then
+              local resins = game
+              for i, v in pairs(root:gsub("@game/", ""):split("/")) do
+                resins = resins:FindFirstChild(v)
+              end
+              for i, v in pairs(resins:GetChildren()) do
+                getgenv()[v.Name] = resins[v.Name]
+              end
+            else
+              local resins = game
+              for i, v in pairs(root:gsub("@game/", ""):split("/")) do
+                resins = resins:FindFirstChild(v)
+              end
+              getgenv()[name] = resins[name]
+            end
           end
-        elseif type(name) == "string" then
-          if name == "*" then
+        elseif root == "@game" then
+          if type(name) == "table" then
             for i, v in pairs(game:GetChildren()) do
-              local i = v.Name:gsub(" ", "")
-              getgenv()[i] = v
+              for j, k in pairs(name) do
+                if v.Name == k then
+                  getgenv()[k] = game[k]
+                end
+              end
             end
-          else
-            getgenv()[name] = game:GetService(name)
-          end
-        end
-      elseif root ~= "@game" then
-        return
-      end
-    else
-      if type(name) == "table" then
-        local restab = getgenv()
-        if root:find('.', 1, true) then
-          for i, v in pairs(root:split(".")) do
-            restab = restab[v]
-          end
-        else
-          restab = restab[root]
-        end
-        for i, v in pairs(restab) do
-          for j, k in pairs(name) do
-            if i == k then
-              getgenv()[k] = restab[k]
+          elseif type(name) == "string" then
+            if name == "*" then
+              for i, v in pairs(game:GetChildren()) do
+                local i = v.Name:gsub(" ", "")
+                getgenv()[i] = v
+              end
+            else
+              getgenv()[name] = game:GetService(name)
             end
           end
+        elseif root ~= "@game" then
+          return
         end
-        getgenv()[name] = restab[name]
-      elseif type(name) == "string" then
-        if name == "*" then
+      elseif root:find("$", 1, true) then
+        if root == "$libs" then
+          if type(name) == "table" then
+            for i, v in pairs(name) do
+              loadstring (game:HttpGet("https://raw.githubusercontent.com/Breakfast-Dev/LuaAdv/main/Libs/" .. v .. ".adv.lua"), "Lib" .. v) ()
+            end
+          elseif type(name) == "string" then
+            loadstring (game:HttpGet("https://raw.githubusercontent.com/Breakfast-Dev/LuaAdv/main/Libs/" .. name .. ".adv.lua"), "Lib" .. name) ()
+          end
+        end
+      else
+        if type(name) == "table" then
           local restab = getgenv()
           if root:find('.', 1, true) then
             for i, v in pairs(root:split(".")) do
@@ -88,22 +80,40 @@ global. import = function(name)
             restab = restab[root]
           end
           for i, v in pairs(restab) do
-            getgenv()[i] = restab[i]
-          end
-        else
-          local restab = getgenv()
-          if root:find('.', 1, true) then
-            for i, v in pairs(root:split(".")) do
-              restab = restab[v]
+            for j, k in pairs(name) do
+              if i == k then
+                getgenv()[k] = restab[k]
+              end
             end
-          else
-            restab = restab[root]
           end
           getgenv()[name] = restab[name]
+        elseif type(name) == "string" then
+          if name == "*" then
+            local restab = getgenv()
+            if root:find('.', 1, true) then
+              for i, v in pairs(root:split(".")) do
+                restab = restab[v]
+              end
+            else
+              restab = restab[root]
+            end
+            for i, v in pairs(restab) do
+              getgenv()[i] = restab[i]
+            end
+          else
+            local restab = getgenv()
+            if root:find('.', 1, true) then
+              for i, v in pairs(root:split(".")) do
+                restab = restab[v]
+              end
+            else
+              restab = restab[root]
+            end
+            getgenv()[name] = restab[name]
+          end
         end
       end
     end
-  end
   }
 end
 global. object = table.object({
