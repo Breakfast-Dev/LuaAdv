@@ -274,6 +274,12 @@ global. Error = table.object({
       "\tat" .. tostring((self.Context or { Name = "Unknown" }).Name .. " | line " .. self.Line)
     )
   end;
+  toError = function(err)
+    local errinfo = err:split(":")
+    local errdesc = errinfo[3]:sub(2, #errinfo[3])
+    local errline = errinfo[2]
+    return Error.new("Error", errdesc, errline, nil)
+  end;
 })
 global. Program = table.object({
   Name = "";
