@@ -269,10 +269,11 @@ global. Error = table.object({
     return self
   end;
   print = function(self)
-    print(
-      "\n ! LuaAdv[Error] | " .. self.Name .. ": " .. self.Description .. "\n"  ..
-      string.rep(" ", #self.Name + 13) .. "at   -> " .. tostring((self.Context or { Name = "Unknown" }).Name .. "\n" .. 
-      string.rep(" ", #self.Name + 13) .. "line -> " .. self.Line) .. "\n\n" .. 
+    (warn or print)(
+      "\n ! LuaAdv[Error] | " .. string.rep(" ", math.max(4 - #self.Name, 0)) .. self.Name .. " : " .. self.Description .. "\n" ..
+      string.rep(" ", 16) .. " | \n" .. 
+      string.rep(" ", 16) .. " | " .. string.rep(" ", math.max(#self.Name - 4, 0)) .. "at   > " .. tostring((self.Context or { Name = "Unknown" }).Name .. "\n" .. 
+      string.rep(" ", 16) .. " | " .. string.rep(" ", math.max(#self.Name - 4, 0)) .. "line > " .. self.Line) .. "\n\n" .. 
       " * This is caught error by LuaAdv\n\n"
     )
   end;
