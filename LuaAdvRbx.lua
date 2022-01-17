@@ -232,9 +232,9 @@ global. Error = table.object({
     new = function(fn, t) T.C(fn, "function", t, "table")
       local self = table.new(Error.Handle)
       self.Try = fn
-      self.Ok = (t.ok or t.Ok) or function(res) end
-      self.Err = (t.err or t.Err) or function(err) end
-      self.Res = (t.res or t.Res) or function() end
+      self.Ok = ((t or {}).ok or (t or {}).Ok) or function(res) end
+      self.Err = ((t or {}).err or (t or {}).Err) or function(err) end
+      self.Res = ((t or {}).res or (t or {}).Res) or function() end
       return self
     end;
     set = function(self, t) T.C(t, "table")
@@ -270,13 +270,15 @@ global. Error = table.object({
   end;
   print = function(self)
     print(
-      self.Name .. ": " .. self.Description .. "\n"  ..
-      "\tat" .. tostring((self.Context or { Name = "Unknown" }).Name .. " | line " .. self.Line)
+      "\nLuaAdv[Error] | " .. self.Name .. ": " .. self.Description .. "\n"  ..
+      string.rep(" ", #self.Name + 11) .. "at   -> " .. tostring((self.Context or { Name = "Unknown" }).Name .. "\n" .. 
+      string.rep(" ", #self.Name + 11) .. "line ->" .. self.Line) .. "\n\n" .. 
+      " * This is caught error by LuaAdv\n\n"
     )
   end;
   toError = function(err)
-    local errinfo = err:split(":")
-    local errdesc = errinfo[3]:sub(2, #errinfo[3])
+    local errinfo = string.split(err, ":")
+    local errdesc = string.sub(errinfo[3], 2, #errinfo[3])
     local errline = errinfo[2]
     return Error.new("Error", errdesc, errline, nil)
   end;
