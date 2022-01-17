@@ -252,7 +252,7 @@ global. Error = table.object({
       elseif (res) then
         pcall(self.Ok, err)
         pcall(self.Res)
-        return res
+        return err
       end
     end; 
     match = function(self, t) T.C(t, "table")
