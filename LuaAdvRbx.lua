@@ -237,7 +237,7 @@ global. Error = table.object({
       self.Res = (t.res or t.Res) or function() end
       return self
     end;
-    set = function(t) T.C(t, "table")
+    set = function(self, t) T.C(t, "table")
       self.Ok = (t.ok or t.Ok) or function(res) end
       self.Err = (t.err or t.Err) or function(err) end
       self.Res = (t.res or t.Res) or function() end
@@ -258,18 +258,20 @@ global. Error = table.object({
   });
   Name = "Error";
   Description = "Default error";
+  Line = 0;
   Context = nil;
-  new = function(name, desc, context) T.C(name, "string", desc, "string", context, "table")
+  new = function(name, desc, line, context) T.C(name, "string", desc, "string", context, "table")
     local self = table.new(Error)
     self.Name = name
     self.Description = desc
+    self.Line = line
     self.Context = context
     return self
   end;
   print = function(self)
     print(
       self.Name .. ": " .. self.Description .. "\n"  ..
-      "\t" .. tostring((self.Context or { Name = "Unknown" }).Name)
+      "\tat" .. tostring((self.Context or { Name = "Unknown" }).Name .. " | line " .. self.Line)
     )
   end;
 })
