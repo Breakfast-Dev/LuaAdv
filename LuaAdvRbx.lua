@@ -16,7 +16,7 @@ global. import = function(name)
             for i, v in pairs(resins:GetChildren()) do
               for j, k in pairs(name) do
                 if v.Name == k then
-                  getgenv()[k] = resins[k]
+                  getgenv()[k:gsub(" ", "")] = resins[k]
                 end
               end
             end
@@ -27,14 +27,14 @@ global. import = function(name)
                 resins = resins:FindFirstChild(v)
               end
               for i, v in pairs(resins:GetChildren()) do
-                getgenv()[v.Name] = resins[v.Name]
+                getgenv()[v.Name:gsub(" ", "")] = resins[v.Name]
               end
             else
               local resins = game
               for i, v in pairs(root:gsub("@game/", ""):split("/")) do
                 resins = resins:FindFirstChild(v)
               end
-              getgenv()[name] = resins[name]
+              getgenv()[name:gsub(" ", "")] = resins[name]
             end
           end
         elseif root == "@game" then
@@ -42,7 +42,7 @@ global. import = function(name)
             for i, v in pairs(game:GetChildren()) do
               for j, k in pairs(name) do
                 if v.Name == k then
-                  getgenv()[k] = game[k]
+                  getgenv()[k:gsub(" ", "")] = game[k]
                 end
               end
             end
@@ -50,10 +50,10 @@ global. import = function(name)
             if name == "*" then
               for i, v in pairs(game:GetChildren()) do
                 local i = v.Name:gsub(" ", "")
-                getgenv()[i] = v
+                getgenv()[i:gsub(" ", "")] = v
               end
             else
-              getgenv()[name] = game:GetService(name)
+              getgenv()[name:gsub(" ", "")] = game:GetService(name)
             end
           end
         elseif root ~= "@game" then
@@ -82,11 +82,11 @@ global. import = function(name)
           for i, v in pairs(restab) do
             for j, k in pairs(name) do
               if i == k then
-                getgenv()[k] = restab[k]
+                getgenv()[k:gsub(" ", "")] = restab[k]
               end
             end
           end
-          getgenv()[name] = restab[name]
+          getgenv()[name:gsub(" ", "")] = restab[name]
         elseif type(name) == "string" then
           if name == "*" then
             local restab = getgenv()
@@ -98,7 +98,7 @@ global. import = function(name)
               restab = restab[root]
             end
             for i, v in pairs(restab) do
-              getgenv()[i] = restab[i]
+              getgenv()[i:gsub(" ", "")] = restab[i]
             end
           else
             local restab = getgenv()
@@ -109,7 +109,7 @@ global. import = function(name)
             else
               restab = restab[root]
             end
-            getgenv()[name] = restab[name]
+            getgenv()[name:gsub(" ", "")] = restab[name]
           end
         end
       end
