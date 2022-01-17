@@ -254,7 +254,11 @@ global. Error = table.object({
         pcall(self.Res)
         return res
       end
-    end
+    end; 
+    match = function(self, t) T.C(t, "table")
+      self:set(t)
+      self:exec()
+    end;
   });
   Name = "Error";
   Description = "Default error";
