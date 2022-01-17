@@ -246,7 +246,7 @@ global. Error = table.object({
     exec = function(self)
       local res, err = pcall(self.Try)
       if (not res) then
-        pcall(self.Err, err)
+        pcall(self.Err, Error.toError(err))
         pcall(self.Res)
         return err
       elseif (res) then
