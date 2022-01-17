@@ -237,6 +237,12 @@ global. Error = table.object({
       self.Res = (t.res or t.Res) or function() end
       return self
     end;
+    set = function(t) T.C(t, "table")
+      self.Ok = (t.ok or t.Ok) or function(res) end
+      self.Err = (t.err or t.Err) or function(err) end
+      self.Res = (t.res or t.Res) or function() end
+      return self
+    end;
     exec = function(self)
       local res, err = pcall(self.Try)
       if (not res) then
@@ -261,7 +267,7 @@ global. Error = table.object({
     return self
   end;
   print = function(self)
-    IO.println(
+    print(
       self.Name .. ": " .. self.Description .. "\n"  ..
       "\t" .. tostring((self.Context or { Name = "Unknown" }).Name)
     )
