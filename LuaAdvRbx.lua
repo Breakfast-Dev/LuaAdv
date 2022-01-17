@@ -270,9 +270,9 @@ global. Error = table.object({
   end;
   print = function(self)
     print(
-      "\nLuaAdv[Error] | " .. self.Name .. ": " .. self.Description .. "\n"  ..
-      string.rep(" ", #self.Name + 11) .. "at   -> " .. tostring((self.Context or { Name = "Unknown" }).Name .. "\n" .. 
-      string.rep(" ", #self.Name + 11) .. "line ->" .. self.Line) .. "\n\n" .. 
+      "\n ! LuaAdv[Error] | " .. self.Name .. ": " .. self.Description .. "\n"  ..
+      string.rep(" ", #self.Name + 14) .. "at   -> " .. tostring((self.Context or { Name = "Unknown" }).Name .. "\n" .. 
+      string.rep(" ", #self.Name + 14) .. "line ->" .. self.Line) .. "\n\n" .. 
       " * This is caught error by LuaAdv\n\n"
     )
   end;
