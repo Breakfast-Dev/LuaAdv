@@ -250,7 +250,7 @@ global. Error = table.object({
         pcall(self.Res)
         return err
       elseif (res) then
-        pcall(self.Ok, res)
+        pcall(self.Ok, err)
         pcall(self.Res)
         return res
       end
