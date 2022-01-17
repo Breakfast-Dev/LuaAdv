@@ -232,20 +232,20 @@ global. Error = table.object({
     new = function(fn, t) T.C(fn, "function", t, "table")
       local self = table.new(Error.Handle)
       self.Try = fn
-      self.Ok = t.ok or t.Ok
-      self.Err = t.err or t.Err
-      self.Result = t.result or t.Result
+      self.Ok = (t.ok or t.Ok) or function(res) end
+      self.Err = (t.err or t.Err) or function(err) end
+      self.Res = (t.res or t.Res) or function() end
       return self
     end;
     exec = function(self)
       local res, err = pcall(self.Try)
       if (not res) then
         pcall(self.Err, err)
-        pcall(self.Result, res)
+        pcall(self.Res)
         return err
       elseif (res) then
-        pcall(self.Ok)
-        pcall(self.Result, res)
+        pcall(self.Ok, res)
+        pcall(self.Res)
         return res
       end
     end
