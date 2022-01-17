@@ -257,7 +257,7 @@ global. Error = table.object({
     end; 
     match = function(self, t) T.C(t, "table")
       self:set(t)
-      self:exec()
+      return self:exec()
     end;
   });
   Name = "Error";
