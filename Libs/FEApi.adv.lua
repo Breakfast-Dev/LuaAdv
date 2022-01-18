@@ -17,7 +17,6 @@ object. global 'FEApi' {
 			end
 			for i, v in pairs(Hats) do
 				for j, k in pairs(Hats) do
-					print(v.Name, k.Name)
 					if v ~= k and v.Name == k.Name then
 						v.Name = v.Name .. tostring(i)
 					end
