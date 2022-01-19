@@ -10,7 +10,7 @@ object. global 'FEApi' {
 		Hats = {};
 		Aligns = {};
 		FixHats = function(character)
-			local Hats = {}
+			local Hats, HatNameIndexs = {}, {}
 			for i, v in pairs(character:GetChildren()) do
 				if (v:IsA("Accessory")) then
 					table.insert(Hats, v)
@@ -19,7 +19,12 @@ object. global 'FEApi' {
 			for i, v in pairs(Hats) do
 				for j, k in pairs(Hats) do
 					if v ~= k and v.Name == k.Name then
-						v.Name = v.Name .. tostring(i)
+						if (HatNameIndexs[v.Name]) then
+							HatNameIndexs[v.Name] = HatNameIndexs[v.Name] + 1
+						else
+							HatNameIndexs[v.Name] = 1
+						end
+						v.Name = v.Name .. tostring(HatNameIndexs[v.Name])
 					end
 				end
 			end
