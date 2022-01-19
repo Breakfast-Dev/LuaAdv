@@ -42,6 +42,10 @@ object. global 'FEApi' {
 			self.Hats = hats or self.Hats
 			return self
 		end;
+		fixHats = function(self)
+			FEApi.HatManager.FixHats(self.Character)
+			return true
+		end;
 		align = function(self)
 			self.Aligns = {}
 			if (type(self.Character) ~= "userdata") then return end
