@@ -60,12 +60,14 @@ object. global 'FEApi' {
 						}
 					elseif v.Type == FEApi.AlignTypes.CFrame then
 						local connection = game:GetService("RunService").Heartbeat:Connect(function()
-							workspace:FindFirstChild(self.Player.Name):FindFirstChild(i).Handle.CFrame = v.Target.CFrame * (self.Aligns[i].CFrame or v.CFrame or CFrame.new())
+							workspace:FindFirstChild(self.Player.Name):FindFirstChild(i).Handle.CFrame = v.Target.CFrame * ((self.Aligns[i] or {}).CFrame or v.CFrame or CFrame.new())
 						end)
-						if (v.FixCFrame) then
-							workspace:FindFirstChild(self.Player.Name):FindFirstChild(i).Handle:FindFirstChildOfClass("AlignPosition"):Destroy()
-							workspace:FindFirstChild(self.Player.Name):FindFirstChild(i).Handle:FindFirstChildOfClass("AlignOrientation"):Destroy()
-						end
+						pcall(function()
+							if (v.FixCFrame) then
+								workspace:FindFirstChild(self.Player.Name):FindFirstChild(i).Handle:FindFirstChildOfClass("AlignPosition"):Destroy()
+								workspace:FindFirstChild(self.Player.Name):FindFirstChild(i).Handle:FindFirstChildOfClass("AlignOrientation"):Destroy()
+							end
+						end)
 						self.Aligns[i] = {
 							Connection = connection, 
 							CFrame = v.CFrame
