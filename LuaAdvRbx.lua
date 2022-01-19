@@ -208,16 +208,16 @@ global. T = table.object({
   end
 })
 global. Import = table.object({
-  service = function(name: string): Service 
+  service = function(name)
     getgenv()[name] = game:GetService(name)
   end;
-  http = function(addr: string): Service 
+  http = function(addr)
     loadstring(game:HttpGet("http://" .. addr))()
   end;
-  https = function(addr: string): Service 
+  https = function(addr) 
     loadstring(game:HttpGet("https://" .. addr))()
   end;
-  static = function(tab: string): Service 
+  static = function(tab)
     for i, v in pairs(tab) do
       getgenv()[i] = v
     end
