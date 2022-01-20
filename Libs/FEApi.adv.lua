@@ -43,6 +43,9 @@ object. global 'FEApi' {
 			return self
 		end;
 		delete = function(self)
+			if type(getgenv().HatEditor) == "table" then
+				getgenv().HatEditor.delete()
+			end
 			for i, v in pairs(self.Aligns) do
 				if v.Type == FEApi.AlignTypes.Align then
 					self.Character:FindFirstChild(i):FindFirstChild("Handle"):FindFirstChildOfClass("AlignPosition").Attachment1 = v.Backup.AlignPositionAtt
@@ -85,7 +88,7 @@ object. global 'FEApi' {
 			getgenv().HatEditor.StartEdit = function(name)
 				if type(getgenv().HatEditor[name]) ~= "table" then getgenv().HatEditor[name] = {} end
 				getgenv().HatEditor[name].RemoveHat = function()
-				workspace:FindFirstChild(self.Player.Name):FindFirstChild(name):Destroy()
+					workspace:FindFirstChild(self.Player.Name):FindFirstChild(name):Destroy()
 					if self.Aligns[name] ~= nil and self.Aligns[name].Type == FEApi.AlignTypes.Align then
 						getgenv().HatEditor[name].EndOffsetMode()
 						self.Aligns[name].Athp:Destroy()
