@@ -288,15 +288,32 @@ global. Error = table.object({
     return Error.new("Error", errdesc, errline, nil)
   end;
 })
-global. Program = table.object({
+global. Script = table.object({
   Name = "";
-  Version = "";
-  new = function(name, version) T.C(name, "string", version, "string")
-    local self = table.new(Program)
+  new = function(name) T.C(name, "string")
+    local self = table.new(Script)
     self.Name = name;
-    self.Version = version;
+    if type(self.start) == "function" then self.start() end
+    if type(self.update) == "function" then 
+      coroutine.resume(coroutine.create(function() while true do game:GetService("RunService").RenderStepped:Wait() self.start() end end))
+    end
+    if type(self.fixedUpdate) == "function" then 
+      game:GetService("RunService").Heartbeat:Connect(function() self.start() end) 
+    end
     return self;
   end;
+  log = function(self, content)
+    print("\n ! LuaAdv[Info] | " .. self.Name .. " : " .. tostring(content))
+  end;
+  warn = function(self, content)
+    (warn or print)("\n ! LuaAdv[Warn] | " .. self.Name .. " : " .. tostring(content))
+  end;
+  error = function(self, content)
+    pcall(function() (error or print)("\n ! LuaAdv[Error] | " .. self.Name .. " : " .. tostring(content)) end)
+  end;
+  -- virtual start();
+  -- virtual update();
+  -- virtual fixedUpdate();
 })
 global. IO = table.object({
   print = function(string, ...) T.C(string, "string")
