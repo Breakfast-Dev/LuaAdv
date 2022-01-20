@@ -69,10 +69,9 @@ object. global 'FEApi' {
 			FEApi.HatManager.FixHats(workspace:FindFirstChild(self.Player.Name))
 			return true
 		end;
-		editHat = function(self, name)
+		editHats = function(self)
 			if type(getgenv().HatEditor) ~= "table" then getgenv().HatEditor = {} end
-			if type(getgenv().HatEditor[name]) ~= "table" then getgenv().HatEditor[name] = {} end
-			getgenv().HatEditor.delete = function(name)
+			getgenv().HatEditor.delete = function()
 				for i, v in pairs(getgenv().HatEditor) do
 					if type(v) == "table" and type(v.EndEdit) == "function" then
 						v.EndEdit()
@@ -84,54 +83,54 @@ object. global 'FEApi' {
 				getgenv().HatEditor = nil
 			end
 			getgenv().HatEditor.StartEdit = function(name)
-				self:editHat(name)
-			end
-			getgenv().HatEditor[name].RemoveHat = function()
+				if type(getgenv().HatEditor[name]) ~= "table" then getgenv().HatEditor[name] = {} end
+				getgenv().HatEditor[name].RemoveHat = function()
 				workspace:FindFirstChild(self.Player.Name):FindFirstChild(name):Destroy()
-				if self.Aligns[name] ~= nil and self.Aligns[name].Type == FEApi.AlignTypes.Align then
-					getgenv().HatEditor[name].EndOffsetMode()
-					self.Aligns[name].Athp:Destroy()
-					self.Aligns[name].Atho:Destroy()
-					self.Aligns[i] = nil
-				elseif self.Aligns[name] ~= nil and self.Aligns[name].Type == FEApi.AlignTypes.CFrame then
-					getgenv().HatEditor[name].EndOffsetMode()
-					self.Aligns[name].Connection:Disconnect()
-					self.Aligns[i] = nil
-				end
-				return true
-			end
-			getgenv().HatEditor[name].RemoveMesh = function()
-				workspace:FindFirstChild(self.Player.Name):FindFirstChild(name).Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
-				return true
-			end
-			getgenv().HatEditor[name].EndEdit = function()
-				getgenv().HatEditor[name].EndOffsetMode()
-				getgenv().HatEditor[name].RemoveHat = nil
-				getgenv().HatEditor[name].RemoveMesh = nil
-				getgenv().HatEditor[name].OffsetMode = nil
-				getgenv().HatEditor[name].EndOffsetMode = nil
-				getgenv().HatEditor[name].EndEdit = nil
-				getgenv().HatEditor[name] = nil
-			end
-			if self.Aligns[name] == nil then return false end
-			getgenv().HatEditor[name].OffsetMode = function()
-				getgenv().HatEditor[name] = setmetatable(getgenv().HatEditor[name], {
-					__newindex = function(t, k, v)
-						if k == "Position" and type(v) == "vector" then
-							self.Aligns[name].Athp.Position = v
-						elseif k == "Rotation" and type(v) == "vector" then
-							self.Aligns[name].Atho.Rotation = v
-						elseif k == "Orientation" and type(v) == "vector" then
-							self.Aligns[name].Atho.Orientation = v
-						elseif k == "CFrame" and type(v) == "userdata" then
-							self.Aligns[name].CFrame = v
-						end
-						return
+					if self.Aligns[name] ~= nil and self.Aligns[name].Type == FEApi.AlignTypes.Align then
+						getgenv().HatEditor[name].EndOffsetMode()
+						self.Aligns[name].Athp:Destroy()
+						self.Aligns[name].Atho:Destroy()
+						self.Aligns[i] = nil
+					elseif self.Aligns[name] ~= nil and self.Aligns[name].Type == FEApi.AlignTypes.CFrame then
+						getgenv().HatEditor[name].EndOffsetMode()
+						self.Aligns[name].Connection:Disconnect()
+						self.Aligns[i] = nil
 					end
-				})
-			end
-			getgenv().HatEditor[name].EndOffsetMode = function()
-				getgenv().HatEditor[name] = setmetatable(getgenv().HatEditor[name], {})
+					return true
+				end
+				getgenv().HatEditor[name].RemoveMesh = function()
+					workspace:FindFirstChild(self.Player.Name):FindFirstChild(name).Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
+					return true
+				end
+				getgenv().HatEditor[name].EndEdit = function()
+					getgenv().HatEditor[name].EndOffsetMode()
+					getgenv().HatEditor[name].RemoveHat = nil
+					getgenv().HatEditor[name].RemoveMesh = nil
+					getgenv().HatEditor[name].OffsetMode = nil
+					getgenv().HatEditor[name].EndOffsetMode = nil
+					getgenv().HatEditor[name].EndEdit = nil
+					getgenv().HatEditor[name] = nil
+				end
+				if self.Aligns[name] == nil then return false end
+				getgenv().HatEditor[name].OffsetMode = function()
+					getgenv().HatEditor[name] = setmetatable(getgenv().HatEditor[name], {
+						__newindex = function(t, k, v)
+							if k == "Position" and type(v) == "vector" then
+								self.Aligns[name].Athp.Position = v
+							elseif k == "Rotation" and type(v) == "vector" then
+								self.Aligns[name].Atho.Rotation = v
+							elseif k == "Orientation" and type(v) == "vector" then
+								self.Aligns[name].Atho.Orientation = v
+							elseif k == "CFrame" and type(v) == "userdata" then
+								self.Aligns[name].CFrame = v
+							end
+							return
+						end
+					})
+				end
+				getgenv().HatEditor[name].EndOffsetMode = function()
+					getgenv().HatEditor[name] = setmetatable(getgenv().HatEditor[name], {})
+				end
 			end
 		end;
 		align = function(self)
