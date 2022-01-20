@@ -55,7 +55,7 @@ object. global 'FEApi' {
 			return self
 		end;
 		fixTools = function(self)
-			FEApi.HatManager.FixTools(workspace:FindFirstChild(self.Player.Name))
+			FEApi.ToolManager.FixTools(workspace:FindFirstChild(self.Player.Name))
 			return true
 		end;
 	};
