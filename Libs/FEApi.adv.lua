@@ -1,8 +1,63 @@
 object. global 'FEApi' {
+	Version = "1.0";
 	AlignTypes = object {
 		Align = 1, 
 		CFrame = 2, 
 		Weld = 3
+	};
+	ToolManager = object {
+		Player = nil;
+		Character = nil;
+		Tools = {};
+		Aligns = {};
+		FixTools = function(character)
+			local Tools, ToolNameIndexs, ToolsLength = {}, {}, 0
+			for i, v in pairs(character:GetChildren()) do
+				if (v:IsA("Tool")) then
+					table.insert(Tools, v)
+					ToolsLength = ToolsLength + 1
+				end
+			end
+			for i, v in pairs(Tools) do
+				for j, k in pairs(Tools) do
+					local ToolSize = "_" .. tostring(math.ceil(v:FindFirstChild("Handle").Size.x)) .. "x" .. tostring(math.ceil(v:FindFirstChild("Handle").Size.y)) .. "x" .. tostring(math.ceil(v:FindFirstChild("Handle").Size.z))
+					if v ~= k and v.Name == k.Name then
+						if (ToolNameIndexs[v.Name .. ToolSize]) then
+							ToolNameIndexs[v.Name .. ToolSize] = ToolNameIndexs[v.Name .. ToolSize] + 1
+						else
+							ToolNameIndexs[v.Name .. ToolSize] = 1
+						end
+						v.Name = v.Name .. ToolSize .. "_" .. tostring(ToolNameIndexs[v.Name .. ToolSize])
+						break
+					elseif j == ToolsLength then
+						v.Name = v.Name .. ToolSize
+					end
+				end
+			end
+			return true
+		end;
+		new = function(player, character, tools)
+			local self = table.new(FEApi.ToolManager)
+			self.Player = player
+			self.Character = character
+			self.Tools = tools
+			return self
+		end;
+		delete = function(self)	
+			for i, v in pairs(self) do
+				self[i] = nil
+			end
+			return nil
+		end;
+		set = function(self, character, tools)
+			self.Character = character or self.Character
+			self.Tools = tools or self.Tools
+			return self
+		end;
+		fixTools = function(self)
+			FEApi.HatManager.FixTools(workspace:FindFirstChild(self.Player.Name))
+			return true
+		end;
 	};
 	HatManager = object {
 		Player = nil;
@@ -184,5 +239,5 @@ object. global 'FEApi' {
 			end
 			return self.Aligns
 		end;
-	}
+	};
 }
