@@ -289,19 +289,28 @@ global. Error = table.object({
   end;
 })
 global. Script = table.object({
+  _connections = {}
   Name = "";
   new = function(name) T.C(name, "string")
     local self = table.new(Script)
     self.Name = name;
     return self;
   end;
+  delete = function(self)
+    self._connections[1] = false
+    self._connections[2]:Disconnect()
+    for i, v in pairs(self) do
+      self[i] = nil
+    end
+    return nil
+  end;
   entry = function(self)
-    if type(self.start) == "function" then self.start() end
+    if type(self.start) == "function" then self:start() end
     if type(self.update) == "function" then 
-      coroutine.resume(coroutine.create(function() while true do game:GetService("RunService").RenderStepped:Wait() self.start() end end))
+      self._connections[1] = true; coroutine.resume(coroutine.create(function() while self._connections[1] do game:GetService("RunService").RenderStepped:Wait() self:start() end end))
     end
     if type(self.fixedUpdate) == "function" then 
-      game:GetService("RunService").Heartbeat:Connect(function() self.start() end) 
+      self._connections[2] = game:GetService("RunService").Heartbeat:Connect(function() self:start() end) 
     end
   end;
   log = function(self, content)
