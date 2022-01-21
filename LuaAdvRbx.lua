@@ -293,6 +293,9 @@ global. Script = table.object({
   new = function(name) T.C(name, "string")
     local self = table.new(Script)
     self.Name = name;
+    return self;
+  end;
+  entry = function(self)
     if type(self.start) == "function" then self.start() end
     if type(self.update) == "function" then 
       coroutine.resume(coroutine.create(function() while true do game:GetService("RunService").RenderStepped:Wait() self.start() end end))
@@ -300,16 +303,15 @@ global. Script = table.object({
     if type(self.fixedUpdate) == "function" then 
       game:GetService("RunService").Heartbeat:Connect(function() self.start() end) 
     end
-    return self;
   end;
   log = function(self, content)
-    print("\n ! LuaAdv[Info] | " .. self.Name .. " : " .. tostring(content))
+    print("\n ! LuaAdv[Info] | " .. tostring(self.Name) .. " : " .. tostring(content))
   end;
   warn = function(self, content)
-    (warn or print)("\n ! LuaAdv[Warn] | " .. self.Name .. " : " .. tostring(content))
+    (warn or print)("\n ! LuaAdv[Warn] | " .. tostring(self.Name) .. " : " .. tostring(content))
   end;
   error = function(self, content)
-    pcall(function() (error or print)("\n ! LuaAdv[Error] | " .. self.Name .. " : " .. tostring(content)) end)
+    pcall(function() (error or print)("\n ! LuaAdv[Error] | " .. tostring(self.Name) .. " : " .. tostring(content)) end)
   end;
   -- virtual start();
   -- virtual update();
