@@ -289,7 +289,7 @@ global. Error = table.object({
   end;
 })
 global. Script = table.object({
-  _connections = {}
+  _connections = {};
   Name = "";
   new = function(name) T.C(name, "string")
     local self = table.new(Script)
