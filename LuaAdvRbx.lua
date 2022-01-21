@@ -307,10 +307,10 @@ global. Script = table.object({
   entry = function(self)
     if type(self.start) == "function" then self:start() end
     if type(self.update) == "function" then 
-      self._connections[1] = true; coroutine.resume(coroutine.create(function() while self._connections[1] do game:GetService("RunService").RenderStepped:Wait() self:start() end end))
+      self._connections[1] = true; coroutine.resume(coroutine.create(function() while self._connections[1] do game:GetService("RunService").RenderStepped:Wait() self:update() end end))
     end
     if type(self.fixedUpdate) == "function" then 
-      self._connections[2] = game:GetService("RunService").Heartbeat:Connect(function() self:start() end) 
+      self._connections[2] = game:GetService("RunService").Heartbeat:Connect(function() self:fixedUpdate() end) 
     end
   end;
   log = function(self, content)
