@@ -63,10 +63,20 @@ global. import = function(name)
         if root == "$libs" then
           if type(name) == "table" then
             for i, v in pairs(name) do
-              loadstring (game:HttpGet("https://raw.githubusercontent.com/Breakfast-Dev/LuaAdv/main/Libs/" .. v .. ".adv.lua"), "Lib" .. v) ()
+              local res, err = loadstring (game:HttpGet("https://raw.githubusercontent.com/Breakfast-Dev/LuaAdv/main/Libs/" .. v .. ".adv.lua"), "Lib" .. v)
+              if type(res) == "function" then
+                res()
+              else
+                Error.toError(err):print()
+              end
             end
           elseif type(name) == "string" then
-            loadstring (game:HttpGet("https://raw.githubusercontent.com/Breakfast-Dev/LuaAdv/main/Libs/" .. name .. ".adv.lua"), "Lib" .. name) ()
+            local res, err = loadstring (game:HttpGet("https://raw.githubusercontent.com/Breakfast-Dev/LuaAdv/main/Libs/" .. name .. ".adv.lua"), "Lib" .. name)
+            if type(res) == "function" then
+              res()
+            else
+              Error.toError(err):print()
+            end
           end
         end
       else
@@ -278,7 +288,7 @@ global. Error = table.object({
       string.rep(" ", 16) .. " | \n" .. 
       string.rep(" ", 16) .. " | " .. string.rep(" ", math.max(#self.Name - 4, 0)) .. "at   > " .. tostring((self.Context or { Name = "Unknown" }).Name .. "\n" .. 
       string.rep(" ", 16) .. " | " .. string.rep(" ", math.max(#self.Name - 4, 0)) .. "line > " .. self.Line) .. "\n\n" .. 
-      " * This is caught error by LuaAdv\n\n"
+      " * This error caught by LuaAdv\n\n"
     )
   end;
   toError = function(err)
