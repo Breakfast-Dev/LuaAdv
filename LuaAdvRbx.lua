@@ -307,8 +307,12 @@ global. Script = table.object({
     return self;
   end;
   delete = function(self)
-    self._connections[1] = false
-    self._connections[2]:Disconnect()
+    if type(self.update) == "function" then
+      self._connections[1] = false
+    end
+    if type(self.fixedUpdate) == "function" then 
+      self._connections[2]:Disconnect()
+    end
     for i, v in pairs(self) do
       self[i] = nil
     end
