@@ -326,6 +326,7 @@ global. Script = table.object({
     if type(self.fixedUpdate) == "function" then 
       self._connections[2] = game:GetService("RunService").Heartbeat:Connect(function(fps) self:fixedUpdate(fps) end) 
     end
+    return self
   end;
   log = function(self, content)
     print("\n ! LuaAdv[Info] | " .. tostring(self.Name) .. " : " .. tostring(content))
