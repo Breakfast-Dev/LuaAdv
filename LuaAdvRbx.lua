@@ -2,7 +2,7 @@ local tmp = {} for i, v in pairs(table) do
     tmp[i] = v
 end table = tmp
 global=getgenv(); function table.object(self, super) if super then setmetatable(self, super) end; self.__index=self; return self end; function table.super(self, super, ...) return setmetatable(super.new(...), self) end
-function table.new(meta, self) return setmetatable(self or {}, meta) end
+function table.new(meta, self) return setmetatable(self or {}, meta) end; function table.delete(self) for i, v in pairs(self) do self[i] = nil end; return nil end
 global. import = function(name)
   return {
     from = function(root)
