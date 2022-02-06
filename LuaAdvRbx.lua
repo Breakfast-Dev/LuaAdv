@@ -1,8 +1,7 @@
 local tmp = {} for i, v in pairs(table) do
     tmp[i] = v
 end table = tmp
-global=getgenv(); function table.object(self, super) if super then setmetatable(self, super) end; self.__index=self; return self end; function table.super(self, super, ...) return setmetatable(super.new(...), self) end
-function table.new(meta, self) return setmetatable(self or {}, meta) end; function table.delete(self) for i, v in pairs(self) do self[i] = nil end; return nil end
+global=getgenv(); function table.object(self, super) if super then setmetatable(self, super) end; self.__index=self; return self end; function table.super(self, super, ...) return setmetatable(super.new(...), self) end; function table.new(meta, self) return setmetatable(self or {}, meta) end; function table.delete(self, super) if super then super.delete(self) else for i, v in pairs(self) do self[i] = nil end end; return nil end
 global. import = function(name)
   return {
     from = function(root)
@@ -313,9 +312,7 @@ global. Script = table.object({
     if type(self.fixedUpdate) == "function" then 
       self._connections[2]:Disconnect()
     end
-    for i, v in pairs(self) do
-      self[i] = nil
-    end
+    table.delete(self)
     return nil
   end;
   entry = function(self)
